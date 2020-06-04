@@ -1,0 +1,55 @@
+apply plugin: 'com.android.application'
+
+android {
+
+    signingConfigs {
+        platform {
+            keyAlias 'platform'
+            keyPassword 'mei2mei'
+            storePassword 'mei2mei'
+            storeFile file(new File('../certs/platform.jks'))
+        }
+    }
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        applicationId "com.example.mydemos"
+        minSdkVersion 22
+        //noinspection ExpiredTargetSdkVersion
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.platform
+        }
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.platform
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation (name: 'rd_device', ext: 'aar')
+    testImplementation 'junit:junit:4.12'
+
+}
