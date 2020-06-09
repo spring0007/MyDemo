@@ -2,7 +2,10 @@ package com.example.mydemos;
 
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.media.AudioFormat;
@@ -10,6 +13,7 @@ import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Message;
@@ -125,9 +129,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		findViewById(R.id.record_play).setOnClickListener(this);
 		findViewById(R.id.record_start).setOnClickListener(this);
 		findViewById(R.id.record_stop).setOnClickListener(this);
+		findViewById(R.id.music_pause).setOnClickListener(this);
+		findViewById(R.id.music_restart).setOnClickListener(this);
         initSerialPortUtil(this);
 		registerReceivers();
-		valueIndex = Settings.System.getInt(getContentResolver(),"default_mic_volume",7);
+		valueIndex = 10;//Settings.System.getInt(getContentResolver(),"default_mic_volume",7);
         mSerialPortUtil.setMicValue(valueIndex);
 		recording = new MediaRecordingUtils(this);
 		recording.setOnAudioStatusUpdateListener(mAudioStatusUpdateListener);
@@ -171,6 +177,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				if (imm != null) {
 					imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+					/** here */
+					view.clearFocus();
 				}
 			}
 			return super.dispatchTouchEvent(ev);
@@ -218,10 +226,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()){
-			case R.id.record_play:
+			case R.id.record_play://录音播放
 				playRecordingFile(this);
 				break;
-			case R.id.record_start:
+			case R.id.record_start://开始录音
 				recording.startRecord();
 				break;
 			case R.id.record_stop:
@@ -248,9 +256,14 @@ public class MainActivity extends Activity implements View.OnClickListener{
                // intent.putExtra("enable",1);
                 intent1.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
                 sendBroadcast(intent1);
-
 				break;
-			case R.id.music_stop://暂停音频
+			case R.id.music_pause: //暂停播放音频
+				pausePlayFromRawFile();
+				break;
+			case R.id.music_restart://继续播放
+				reStartPlayFromRawFile();
+				break;
+			case R.id.music_stop://停止音频
 				stopPlayFromRawFile();
 
 				break;
@@ -329,7 +342,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 					setSosNumber(mSosNumberNum.getText().toString());
 				}
 				break;
-			case R.id.bt_set_phone_mode:
+			case R.id.bt_set_phone_mode: //设置模式
 				String text = et_set_phone_mode1.getText().toString();
 
 				// 14 推送声音
@@ -619,14 +632,14 @@ public class MainActivity extends Activity implements View.OnClickListener{
 					valueIndex = 0;
 					break;
 			}
-			if(valueIndex<=0){
-				valueIndex = 0;
+			if(valueIndex<=1){
+				valueIndex = 1;
 
 			}else if(valueIndex>14){
 					valueIndex = 14;
 			}
 
-			Settings.System.putInt(getContentResolver(),"default_mic_volume",valueIndex);
+			//Settings.System.putInt(getContentResolver(),"default_mic_volume",valueIndex);
 			mSerialPortUtil.setMicValue(valueIndex);
 		}
 	};
@@ -689,7 +702,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 						//boolean ava =audioManager.isMicrophoneMute();
 						//boolean ava1 = audioManager.isSpeakerphoneOn();
 						Toast.makeText(context, "耳机拔出"/*,isSPK="+isSPK+",扬声器="+ava+",免提="+ava1*/, Toast.LENGTH_LONG).show();
-						stopPlayFromRawFile(); //暂停播放
+						pausePlayFromRawFile(); //暂停播放
 					/*if(isSPK){
 						mSerialPortUtil.setMicPlayEnableMode(true);
 					}*/
@@ -792,17 +805,20 @@ public class MainActivity extends Activity implements View.OnClickListener{
 			try {
 				if(mPlayer==null) {
 					mPlayer = new MediaPlayer();
+
 				}
 				try {
 					mPlayer.setDataSource(mFilePath);
                     if (mPlayer != null && mPlayer.isPlaying()) {
                         mPlayer.stop();
                         mPlayer.release();
+
                     }
-					if (!mPlayer.isPlaying()) {
+					 if (mPlayer != null ) {
 						mPlayer.prepare();
 						mPlayer.start();
 						mPlayer.setLooping(false);//循环播放
+						isPause = false;
 					}
 				} catch (IOException e) {
 				    Log.e(TAG,"e1="+e.getLocalizedMessage());
@@ -824,6 +840,22 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
 	}
 
+	private void pausePlayFromRawFile() {
+		if (mPlayer != null && mPlayer.isPlaying() && !isPause) {
+			mPlayer.pause();
+			isPause = true;
+		}
+
+	}
+
+	private void reStartPlayFromRawFile() {
+		if (mPlayer != null && isPause) {
+			mPlayer.start();
+			isPause = false;
+		}
+
+	}
+	boolean isPause = false;
 
 	/**
 	 * 结束播放来电和呼出铃声
@@ -833,6 +865,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 			mPlayer.stop();
 			mPlayer.release();
 		}
+		isPause = false;
 		mPlayer = null;
 	}
 
@@ -884,5 +917,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
 		return available;
 	}
+
+
 
 }

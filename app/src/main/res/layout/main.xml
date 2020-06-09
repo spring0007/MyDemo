@@ -25,14 +25,14 @@
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="1" >
-
         <TextView
             android:id="@+id/log"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="10dp"
             android:textColor="#ffffffff"
-            android:textSize="12sp" />
+            android:textSize="16sp" />
+
     </ScrollView>
 
 
@@ -139,6 +139,8 @@
 			<LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:orientation="horizontal" >
 				
                 <EditText
@@ -163,6 +165,8 @@
 			<LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:orientation="horizontal" >
 				
                 <EditText
@@ -187,6 +191,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:orientation="horizontal" >
 				
                 <EditText
@@ -217,6 +223,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:orientation="horizontal" >
 
                 <EditText
@@ -240,6 +248,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:orientation="horizontal" >
 
                 <EditText
@@ -263,6 +273,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:orientation="horizontal" >
 
                 <EditText
@@ -286,6 +298,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:orientation="horizontal" >
 
                 <EditText
@@ -309,6 +323,8 @@
 			  <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                  android:focusable="true"
+                  android:focusableInTouchMode="true"
                 android:orientation="horizontal" >
 
                 <EditText
@@ -443,6 +459,31 @@
                     android:soundEffectsEnabled="false"
                     />
                 <Button
+                    android:id="@+id/music_pause"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/music_pause"
+                    android:soundEffectsEnabled="false"
+                    />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="2"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/music_restart"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/music_restart"
+                    android:soundEffectsEnabled="false"
+                    />
+                <Button
                     android:id="@+id/music_stop"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -452,6 +493,7 @@
                     />
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -476,18 +518,18 @@
 
             </LinearLayout>
             <LinearLayout
-                android:layout_width="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="3"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/record_start"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:weightSum="3"
-                android:orientation="horizontal">
-                <Button
-                    android:id="@+id/record_start"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/record_start"
-                    android:soundEffectsEnabled="false"
-                    />
+                android:layout_weight="1"
+                android:text="@string/record_start"
+                android:soundEffectsEnabled="false"
+                />
 
                 <Button
                     android:id="@+id/record_stop"
